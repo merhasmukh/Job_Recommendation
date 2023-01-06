@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 # and get in string
 def getdata(url):
     r = requests.get(url)
+    print("RRRR",r)
     return r.text
 
 # Get Html code using parse
@@ -20,7 +21,7 @@ def html_code(url):
     soup = BeautifulSoup(htmldata, 'html.parser')
   
     # return html code
-    return(soup)
+    return (soup)
 
 # filter job data using
 # find_all function
