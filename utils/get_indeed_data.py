@@ -1,56 +1,30 @@
-
-# import module
 import requests
+from selenium import webdriver
 from bs4 import BeautifulSoup
+import time
+import pandas as pd
 
-# user define function
-# Scrape the data
-# and get in string
-def getdata(url):
-    r = requests.get(url)
-    print("RRRR",r)
-    return r.text
+def get_position_url_list(position,location) -> list:
+    try:
+        global position_url
+        position_url=[]
+        user_text=position.replace(" ","+")
+        url2 = "https://www.indeed.com/"
+        # url = "https://www.indeed.com/jobs?q={}&l={}".format(user_text,location)
+        driver = webdriver.Chrome()
+        driver.get(url2)
 
-# Get Html code using parse
-def html_code(url):
-  
-    # pass the url
-    # into getdata function
-    htmldata = getdata(url)
-    print("htmldata",htmldata)
-    soup = BeautifulSoup(htmldata, 'html.parser')
-  
-    # return html code
-    return (soup)
+        time.sleep(3)
+        soup = BeautifulSoup(driver.page_source,features='html.parser')
 
-# filter job data using
-# find_all function
-def job_data(soup):
     
-    # find the Html tag
-    # with find()
-    # and convert into string
-    data_str = ""
-    for item in soup.find_all("a", class_="jobtitle turnstileLink"):
-        data_str = data_str + item.get_text()
-    result_1 = data_str.split("\n")
-    return(result_1)
 
-def company_data(soup):
-  
-    # find the Html tag
-    # with find()
-    # and convert into string
-    data_str = ""
-    result = ""
-    for item in soup.find_all("div", class_="sjcl"):
-        data_str = data_str + item.get_text()
-    result_1 = data_str.split("\n")
-  
-    res = []
-    for i in range(1, len(result_1)):
-        if len(result_1[i]) > 1:
-            res.append(result_1[i])
-    return(res)
+        driver.close()
+        # print(soup)
+        # print(url)
+        results = soup.find(class_="jobsearch-Yosegi")
+        print(results)
+    except Exception as e:
+        return {"error":"can't get urls list..."+str(e)}
 
- 
+get_position_url_list("machine learning","ahmedabad")
